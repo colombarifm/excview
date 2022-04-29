@@ -1,0 +1,60 @@
+#!/usr/bin/gnuplot
+
+! mkdir figuras
+
+set terminal epslatex standalone size 16cm,7cm color colortext font ",10" header \
+   "\\usepackage[T1]{fontenc}\n\\\usepackage[utf8]{inputenc}"
+
+set output 'figuras/uv_plot.tex'
+set format '$%g$'
+
+# comment xmgrace entries
+set datafile commentschar "#@&"
+
+# Line styles
+set style line 1 linecolor rgb '#0060ad' linetype 1 linewidth 5 # blue
+set style line 2 linecolor rgb '#dd181f' linetype 1 linewidth 5 # red
+set style line 3 linecolor rgb '#000000' linetype 1 linewidth 5 # black
+set style line 4 linecolor rgb '#00ff00' linetype 1 linewidth 5 # green
+set style line 5 linecolor rgb '#FFFFFF' linetype 1 linewidth 6 # white
+set style line 6 linecolor rgb '#808080' linetype 0 linewidth 2
+set style line 7 linecolor rgb '#000000' linetype 1 linewidth 7 # black
+
+set border linewidth 7
+
+# Tics
+set ytics 1
+set tics scale 0
+set mytics 1
+set grid back ls 6
+
+set xtics format "$%3.0f$"
+
+# x-Axis range
+set xrange[300:900]
+set xtics 300,100,900
+
+# y-Axis range
+set yrange[0:199999]
+set ytics 50000
+
+# set margins
+set lmargin screen 0.15
+set rmargin screen 0.95
+set tmargin screen 0.90
+set bmargin screen 0.15
+
+set object  1 rect from _WINI_,0 to _WEND_,199999 fc rgb "yellow" fs border
+
+set title "Transitions from _WINI_ to _WEND_ nm" offset 0,-0.8
+set xlabel 'Wavelength (nm)' 
+set ylabel 'Abs (L mol$^{-1}$ cm$^{-1}$)' offset -0.5,0
+
+plot '../files_stda/_FILENAME_.dat' u ($1):($2) w l ls 4 notitle,\
+     '../files_stda/_FILENAME_.dat' u ($1):($1 >= _WINI_ && $1 <= _WEND_ ? $2 : 1/0) w l ls 7 notitle
+
+# release the output
+set output
+
+! pdflatex figuras/uv_plot.tex > /dev/null
+! rm uv_plot.log uv_plot.aux
