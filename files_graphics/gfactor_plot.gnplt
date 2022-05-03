@@ -35,8 +35,8 @@ set xrange[299:899]
 set xtics 300,100,900
 
 # y-Axis range
-set yrange[-99:99]
-set ytics -100,20,100
+set yrange[-5.9:5.9]
+set ytics -6,2,6
 
 # set margins
 set lmargin screen 0.15
@@ -48,10 +48,10 @@ set object  1 rect from _WINI_,0 to _WEND_,299999 fc rgb "yellow" fs border
 
 set title "Transitions from _WINI_ to _WEND_ nm" offset 0,-0.8
 set xlabel 'Wavelength (nm)' 
-set ylabel 'R (L mol$^{-1}$ cm$^{-1}$)' offset -0.5,0
+set ylabel "$g$-factor $\\times 10^{-3}$" offset -0.5,0
 
-plot '_STDAFILES_/_FILENAME___SPECTYPE_.dat' u ($1):($2) w l ls 4 notitle,\
-     '_STDAFILES_/_FILENAME___SPECTYPE_.dat' u ($1):($1 >= _WINI_ && $1 <= _WEND_ ? $2 : 1/0) w l ls 7 notitle
+plot '_STDAFILES_/_FILENAME___SPECTYPE_.dat' u ($1):(1000*$2) w l ls 4 notitle,\
+     '_STDAFILES_/_FILENAME___SPECTYPE_.dat' u ($1):($1 >= _WINI_ && $1 <= _WEND_ ? 1000*$2 : 1/0) w l ls 7 notitle
 
 # release the output
 set output

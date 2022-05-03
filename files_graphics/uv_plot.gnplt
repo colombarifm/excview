@@ -5,7 +5,7 @@
 set terminal epslatex standalone size 16cm,7cm color colortext font ",10" header \
    "\\usepackage[T1]{fontenc}\n\\\usepackage[utf8]{inputenc}"
 
-set output 'figuras/uv_plot.tex'
+set output 'figuras/_SPECTYPE__plot.tex'
 set format '$%g$'
 
 # comment xmgrace entries
@@ -50,11 +50,11 @@ set title "Transitions from _WINI_ to _WEND_ nm" offset 0,-0.8
 set xlabel 'Wavelength (nm)' 
 set ylabel 'Abs (L mol$^{-1}$ cm$^{-1}$)' offset -0.5,0
 
-plot '../files_stda/_FILENAME_.dat' u ($1):($2) w l ls 4 notitle,\
-     '../files_stda/_FILENAME_.dat' u ($1):($1 >= _WINI_ && $1 <= _WEND_ ? $2 : 1/0) w l ls 7 notitle
+plot '../files_stda/_FILENAME___SPECTYPE_.dat' u ($1):($2) w l ls 4 notitle,\
+     '../files_stda/_FILENAME___SPECTYPE_.dat' u ($1):($1 >= _WINI_ && $1 <= _WEND_ ? $2 : 1/0) w l ls 7 notitle
 
 # release the output
 set output
 
-! pdflatex figuras/uv_plot.tex > /dev/null
-! rm uv_plot.log uv_plot.aux
+! pdflatex figuras/_SPECTYPE__plot.tex > /dev/null
+! rm _SPECTYPE__plot.log _SPECTYPE__plot.aux
