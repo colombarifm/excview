@@ -110,7 +110,7 @@ Show_usage () {
   line[3]="   --max <maximum wavelength (nm)>" 
   line[4]="   --step <wavelength range to average (nm)>"
   line[5]="   --plot [charges|esp]"
-  line[6]="   --spec [uv|ecd]"
+  line[6]="   --spec [uv|ecd|gfactor]"
   line[7]="   --name <basename>"
   line[8]="" 
   line[9]="   --help (shows this help)"
@@ -350,6 +350,11 @@ Check_options () {
 
     printf "\n\n\tECD spectrum will be analyzed...\n"
 
+  elif [ "$spec_type" == "gfactor" ]
+  then
+
+    printf "\n\n\tg-factor spectrum will be analyzed...\n"
+
   else
 
     printf "\t"
@@ -422,12 +427,12 @@ Inquire_files () {
   if [ "$plot_opt" == "charges" ]
   then
 
-    files_calc="${filenames}.xyz ${filenames}.dat ${filenames}.exc"
+    files_calc="${filenames}.xyz ${filenames}_${spec_type}.dat ${filenames}.exc"
   
   elif [ "$plot_opt" == "esp" ]
   then
 
-    files_calc="${filenames}.xyz sas_${filenames}.xyz ${filenames}.dat ${filenames}.exc"
+    files_calc="${filenames}.xyz sas_${filenames}.xyz ${filenames}_${spec_type}.dat ${filenames}.exc"
 
   fi
 
@@ -583,6 +588,7 @@ Plot_spectrum () {
   sed -i "s/_WEND_/${end}/g"            ${spec_type}_plot.gnplt
   sed -i "s|_STDAFILES_|${STDAFILES}|g" ${spec_type}_plot.gnplt
   sed -i "s/_FILENAME_/${filenames}/g"  ${spec_type}_plot.gnplt
+  sed -i "s/_SPECTYPE_/${spec_type}/g"  ${spec_type}_plot.gnplt
   
   ./${spec_type}_plot.gnplt
   
@@ -622,13 +628,18 @@ Generate_figures () {
 
     $vmd -xyz $STDAFILES/${filenames}.xyz -e molecule_colors.tcl -args -f average_${w_ini}-${w_end}.dat -r 0 &> /dev/null
 
-    convert ${filenames}_full.tga -resize 760x570\! -bordercolor Black -border 10x10 -bordercolor White -border 20x10 ${filenames}_full.png
-  
+    convert ${filenames}_full.tga -resize 760x570\! -bordercolor Black -border 10x10 -bordercolor White -border 20x10 ${filenames}_full_tmp.png
+    
+      
+    convert ${filenames}_full_tmp.png -background White -pointsize 36 -gravity None \
+      -fill Blue -font Symbol -annotate +50+70  "D" -font Helvetica -annotate +80+70  "q > 0" \
+      -fill Red  -font Symbol -annotate +50+120 "D" -font Helvetica -annotate +80+120 "q < 0" ${filenames}_full.png
+
     convert +append ../${filenames}_mol.png ${filenames}_full.png ${filenames}.png
     
     convert -append ${spec_type}_plot.png ${filenames}.png final_${frame_number}.png
   
-    rm ${filenames}_full.tga ${filenames}_full.png ${spec_type}_plot.png 
+    rm ${filenames}_full.tga ${filenames}_full_tmp.png ${filenames}_full.png ${spec_type}_plot.png 
 
   elif [ "$plot_opt" == "esp" ]; then
 
