@@ -87,10 +87,11 @@ module write_vmd_files
       write(10,'("  $atom_select delete")')
       write(10,'("}")')
       write(10,*)
-      write(10,'("scale by 0.95")')
-      write(10,'("rotate z by -90")')
-      write(10,'("rotate y by 15")')
-      write(10,'("translate by 0 0 0")')
+      write(10,'("scale by _SCALE_")')
+      write(10,'("rotate z by _ROTZ_")')
+      write(10,'("rotate y by _ROTY_")')
+      write(10,'("rotate x by _ROTX_")')
+      write(10,'("translate by _TRANSX_ _TRANSY_ _TRANSZ_")')
       write(10,*)
       write(10,'("render TachyonInternal ",(A))') trim(filename)//'.tga'
       write(10,*)
@@ -244,7 +245,7 @@ program calculate_esp
                                 ! J / C = V
       pot_tot(j) = pot_tot(j) + k_coul * q(i) * e2c * mV / ( rij * a2m ) 
 
-      if ( label(i) == 'Cu' ) then
+      if ( ( label(i) == 'Cu' ) .or. ( label(i) == 'S' ) ) then
 
         pot_M(j) = pot_M(j) + k_coul * q(i) * e2c * mV / ( rij * a2m ) 
 

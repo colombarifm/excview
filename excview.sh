@@ -56,11 +56,11 @@ column_width="80"
 
 #####----- define program directories
 
-SCRIPTHOME="/home/felippe/repos/excview"
+SCRIPTHOME=
 
 #####----- define directory where stda files are placed
 
-STDAFILES="/home/felippe/teste_stda_excitons/files_stda"
+STDAFILES=
 
 #####----- load some VMD options
 
@@ -476,6 +476,19 @@ Inquire_files () {
   
   done
 
+  if [ -f "VMD_VIEW" ]
+  then
+
+    printf "\n\t\tInput file \"VMD_VIEW\" found!"  
+
+  else
+
+    printf "\n\t\tInput file \"VMD_VIEW\" not found. Aborting.\n" 
+
+    exit
+
+  fi
+
 }
 
 #--------------------------------------------------------------------------------------------------#
@@ -607,6 +620,24 @@ Generate_molecule () {
 
   sed "s/_FILENAME_/${filenames}/g" $SCRIPTHOME/files_graphics/molecule_view.tcl > molecule_view.tcl
 
+  scale=$( grep "scale" VMD_VIEW | awk '{printf $2}' )
+
+  rot_x=$( grep "rotatex" VMD_VIEW | awk '{printf $2}' )
+  rot_y=$( grep "rotatey" VMD_VIEW | awk '{printf $2}' )
+  rot_z=$( grep "rotatez" VMD_VIEW | awk '{printf $2}' )
+
+  trans_x=$( grep "translatex" VMD_VIEW | awk '{printf $2}' )
+  trans_y=$( grep "translatey" VMD_VIEW | awk '{printf $2}' )
+  trans_z=$( grep "translatez" VMD_VIEW | awk '{printf $2}' )
+
+  sed -i "s/_SCALE_/${scale}/g" molecule_view.tcl
+  sed -i "s/_ROTX_/${rot_x}/g" molecule_view.tcl
+  sed -i "s/_ROTY_/${rot_y}/g" molecule_view.tcl
+  sed -i "s/_ROTZ_/${rot_z}/g" molecule_view.tcl
+  sed -i "s/_TRANSX_/${trans_x}/g" molecule_view.tcl
+  sed -i "s/_TRANSY_/${trans_y}/g" molecule_view.tcl
+  sed -i "s/_TRANSZ_/${trans_z}/g" molecule_view.tcl
+
   $vmd -xyz $STDAFILES/${filenames}.xyz -e molecule_view.tcl -r 0 &> /dev/null
 
   convert ${filenames}_mol.tga -resize 760x570\! -bordercolor Black -border 10x10 -bordercolor White -border 20x10 ${filenames}_mol.png
@@ -649,6 +680,14 @@ Generate_figures () {
 
     for i in esp_Total esp_M esp_Ligands
     do
+
+      sed -i "s/_SCALE_/${scale}/g" ${i}.tcl
+      sed -i "s/_ROTX_/${rot_x}/g" ${i}.tcl
+      sed -i "s/_ROTY_/${rot_y}/g" ${i}.tcl
+      sed -i "s/_ROTZ_/${rot_z}/g" ${i}.tcl
+      sed -i "s/_TRANSX_/${trans_x}/g" ${i}.tcl
+      sed -i "s/_TRANSY_/${trans_y}/g" ${i}.tcl
+      sed -i "s/_TRANSZ_/${trans_z}/g" ${i}.tcl
 
       $vmd -e ${i}.tcl -r 0 &> /dev/null 
       

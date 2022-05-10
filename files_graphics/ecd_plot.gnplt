@@ -44,7 +44,7 @@ set rmargin screen 0.95
 set tmargin screen 0.90
 set bmargin screen 0.15
 
-set object  1 rect from _WINI_,0 to _WEND_,299999 fc rgb "yellow" fs border
+set object  1 rect from _WINI_-1000 to _WEND_,1000 fc rgb "yellow" fs border
 
 set title "Transitions from _WINI_ to _WEND_ nm" offset 0,-0.8
 set xlabel 'Wavelength (nm)' 

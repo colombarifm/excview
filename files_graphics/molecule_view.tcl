@@ -22,13 +22,21 @@ mol modstyle 1 0 CPK 1.00 0.50 50 50
 mol modselect 1 0 {all}
 mol modcolor 1 top Name
 
+mol addrep top
+mol modrep 2 0
+mol modmaterial 2 0 EdgyShiny
+mol modstyle 2 0 QuickSurf 0.80 1.80 0.5 3.0
+mol modselect 2 0 {name Cu S}
+mol modcolor 2 top Name
+
 mol selupdate 0 top 0
 mol colupdate 0 top 0
 
-scale by 1.15
-rotate z by -90
-rotate y by  15
-translate by 0 0 0
+scale by _SCALE_
+rotate z by _ROTZ_
+rotate y by _ROTY_
+rotate x by _ROTX_
+translate by _TRANSX_ _TRANSY_ _TRANSZ_
 
 render TachyonInternal _FILENAME__mol.tga
 

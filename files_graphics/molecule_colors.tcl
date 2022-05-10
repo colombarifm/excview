@@ -38,10 +38,11 @@ for { set j 0 } { $j < ( $num_atoms ) } { incr j } {
   $atom_select delete
 }
 
-scale by 1.15
-rotate z by -90
-rotate y by  15
-translate by 0 0 0
+scale by _SCALE_
+rotate z by _ROTZ_
+rotate y by _ROTY_
+rotate x by _ROTX_
+translate by _TRANSX_ _TRANSY_ _TRANSZ_
 
 render TachyonInternal _FILENAME__full.tga
 
